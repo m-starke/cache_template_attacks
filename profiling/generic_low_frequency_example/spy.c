@@ -74,6 +74,9 @@ int main(int argc, char** argv)
   char j = 0;
   size_t count = 0;
   printf("file,addr,hits\n");
+
+  sleep(3);
+
   size_t promille = 0;
  	for (size_t i = 0; i < range; i += 64)
   {

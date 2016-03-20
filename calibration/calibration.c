@@ -11,17 +11,17 @@ size_t miss_histogram[80];
 
 size_t onlyreload(void* addr)
 {
-  size_t time = rdtsc();
+  size_t time = rdtscp();
   maccess(addr);
-  size_t delta = rdtsc() - time;
+  size_t delta = rdtscp() - time;
   return delta;
 }
 
 size_t flushandreload(void* addr)
 {
-  size_t time = rdtsc();
+  size_t time = rdtscp();
   maccess(addr);
-  size_t delta = rdtsc() - time;
+  size_t delta = rdtscp() - time;
   flush(addr);
   return delta;
 }

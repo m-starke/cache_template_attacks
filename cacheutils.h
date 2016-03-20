@@ -6,6 +6,13 @@
 #define MIN(X,Y) (((X) < (Y)) ? (X) : (Y))
 #endif
 
+uint64_t rdtscp() {
+  uint64_t a, d;
+  asm volatile("rdtscp" : "=a" (a), "=d" (d));
+  a = (d << 32) | a;
+  return a;
+}
+
 uint64_t rdtsc_nofence() {
   uint64_t a, d;
   asm volatile ("rdtsc" : "=a" (a), "=d" (d));

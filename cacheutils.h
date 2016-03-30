@@ -6,9 +6,17 @@
 #define MIN(X,Y) (((X) < (Y)) ? (X) : (Y))
 #endif
 
-uint64_t rdtscp() {
+
+/*
+Correct usage of the rdtscp instruction.
+clang produces faulty code with the -O3 flag set using only the inline assembly of rdtsc.
+The parameter of the maccess function is pushed into rcx before executing the rdtscp instruction
+and therefore the rdtscp instruction clears the rcx register and the movq instruction trys then to
+access a null pointer.
+*/
+uint64_t rdtscp(uint32_t *aux) {
   uint64_t a, d;
-  asm volatile("rdtscp" : "=a" (a), "=d" (d));
+  asm volatile("rdtscp" : "=a" (a), "=d" (d), "=c" (*aux) : : );
   a = (d << 32) | a;
   return a;
 }

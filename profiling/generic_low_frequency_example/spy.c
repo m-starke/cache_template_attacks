@@ -5,6 +5,8 @@
 #else
 #include <fcntl.h>
 #include <sys/mman.h>
+//added
+#include <sys/stat.h>
 #endif
 #include <stdio.h>
 #include <string.h>
@@ -16,19 +18,22 @@
 
 // this number varies on different systems
 //#define MIN_CACHE_MISS_CYCLES (155)
-#define MIN_CACHE_MISS_CYCLES (215)
+#define MIN_CACHE_MISS_CYCLES (100)
 
 size_t flushandreload(void* addr, size_t duration)
 {
   size_t count = 0;
   size_t time = 0;
   size_t delta = 0;
-  size_t end = rdtsc() + duration * 1000*1000;
+  //size_t end = rdtsc() + duration * 1000*1000;
+  size_t end = rdtscp_noaux() + duration * 1000*1000;
   while(time < end)
   {
-    time = rdtsc();
+    //time = rdtsc();
+    time = rdtscp_noaux();
     maccess(addr);
-    delta = rdtsc() - time;
+    //delta = rdtsc() - time;
+    delta = rdtscp_noaux() - time;
     flush(addr);
     if (delta < MIN_CACHE_MISS_CYCLES)
     {
@@ -68,7 +73,17 @@ int main(int argc, char** argv)
   int fd = open(filename,O_RDONLY);
   if (fd < 3)
     exit(!printf("error: failed to open file\n"));
-  unsigned char* addr = (unsigned char*)mmap(0, 64*1024*1024, PROT_READ, MAP_SHARED, fd, 0);
+
+  // added:
+  struct stat stats;
+  if (fstat(fd, &stats) == -1) {
+    exit(!printf("Error getting file stats.\n"));
+  }
+  printf("Filesize: %lldbytes\n", stats.st_size);
+
+  //unsigned char* addr = (unsigned char*)mmap(0, 64*1024*1024, PROT_READ, MAP_SHARED, fd, 0);
+  unsigned char* addr = (unsigned char*)mmap(0, stats.st_size, PROT_READ, MAP_SHARED, fd, 0);
+
 #endif
   start = addr + offset;
   char j = 0;
@@ -98,4 +113,3 @@ int main(int argc, char** argv)
   close(fd);
   return 0;
 }
-

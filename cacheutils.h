@@ -21,6 +21,14 @@ uint64_t rdtscp(uint32_t *aux) {
   return a;
 }
 
+uint64_t rdtscp_noaux() {
+  uint64_t a, d;
+  uint32_t aux;
+  asm volatile("rdtscp" : "=a" (a), "=d" (d), "=c" (aux) : : );
+  a = (d << 32) | a;
+  return a;
+}
+
 uint64_t rdtsc_nofence() {
   uint64_t a, d;
   asm volatile ("rdtsc" : "=a" (a), "=d" (d));

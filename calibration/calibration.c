@@ -12,18 +12,18 @@ size_t miss_histogram[80];
 size_t onlyreload(void* addr)
 {
   uint32_t aux;
-  size_t time = rdtscp(&aux);
+  size_t time = rdtscp_noaux();
   maccess(addr);
-  size_t delta = rdtscp(&aux) - time;
+  size_t delta = rdtscp_noaux() - time;
   return delta;
 }
 
 size_t flushandreload(void* addr)
 {
   uint32_t aux;
-  size_t time = rdtscp(&aux);
+  size_t time = rdtscp_noaux();
   maccess(addr);
-  size_t delta = rdtscp(&aux) - time;
+  size_t delta = rdtscp_noaux() - time;
   flush(addr);
   return delta;
 }

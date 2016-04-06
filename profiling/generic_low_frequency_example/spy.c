@@ -32,8 +32,8 @@ size_t flushandreload(void* addr, size_t duration)
     //time = rdtsc();
     time = rdtscp_noaux();
     maccess(addr);
-    //delta = rdtsc() - time;
-    delta = rdtscp_noaux() - time;
+    delta = rdtsc() - time;
+    //delta = rdtscp_noaux() - time;
     flush(addr);
     if (delta < MIN_CACHE_MISS_CYCLES)
     {
@@ -79,10 +79,11 @@ int main(int argc, char** argv)
   if (fstat(fd, &stats) == -1) {
     exit(!printf("Error getting file stats.\n"));
   }
-  printf("Filesize: %lldbytes\n", stats.st_size);
+  //printf("Filesize: %lldbytes\n", stats.st_size);
 
   //unsigned char* addr = (unsigned char*)mmap(0, 64*1024*1024, PROT_READ, MAP_SHARED, fd, 0);
-  unsigned char* addr = (unsigned char*)mmap(0, stats.st_size, PROT_READ, MAP_SHARED, fd, 0);
+  unsigned char* addr = (unsigned char*)mmap(0, 8*1024*1024, PROT_READ, MAP_SHARED, fd, 0);
+  //unsigned char* addr = (unsigned char*)mmap(0, stats.st_size, PROT_READ, MAP_SHARED, fd, 0);
 
 #endif
   start = addr + offset;

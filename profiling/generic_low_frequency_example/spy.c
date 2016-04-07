@@ -81,8 +81,8 @@ int main(int argc, char** argv)
   }
   //printf("Filesize: %lldbytes\n", stats.st_size);
 
-  //unsigned char* addr = (unsigned char*)mmap(0, 64*1024*1024, PROT_READ, MAP_SHARED, fd, 0);
-  unsigned char* addr = (unsigned char*)mmap(0, 8*1024*1024, PROT_READ, MAP_SHARED, fd, 0);
+  unsigned char* addr = (unsigned char*)mmap(0, 64*1024*1024, PROT_READ, MAP_SHARED, fd, 0);
+  //unsigned char* addr = (unsigned char*)mmap(0, 8*1024*1024, PROT_READ, MAP_SHARED, fd, 0);
   //unsigned char* addr = (unsigned char*)mmap(0, stats.st_size, PROT_READ, MAP_SHARED, fd, 0);
 
 #endif

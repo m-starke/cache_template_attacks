@@ -18,7 +18,7 @@
 
 // this number varies on different systems
 //#define MIN_CACHE_MISS_CYCLES (155)
-#define MIN_CACHE_MISS_CYCLES (100)
+#define MIN_CACHE_MISS_CYCLES (130)
 
 size_t flushandreload(void* addr, size_t duration)
 {
